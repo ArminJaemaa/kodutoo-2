@@ -28,10 +28,13 @@ class Typer{
         this.resultsModal = document.getElementById("results-modal");
         this.resultsModalButton = document.getElementById("showResults");
         this.closeResults = document.getElementsByClassName("results-close")[0];
+
+        this.player = document.getElementById("audioPlayer");
         
 
         this.loadFromFile();
         this.showResults(this.resultCount);
+        
     }
 
     loadFromFile(){
@@ -110,7 +113,6 @@ class Typer{
         this.closeResults.addEventListener('click', () => {
             this.resultsModal.style.display = "none";
         });
-        
     }
 
     generateWords(){
@@ -118,7 +120,6 @@ class Typer{
             const wordLength = this.startingWordLength + i;
             const randomWord = Math.round(Math.random() * this.words[wordLength].length);
             this.typeWords[i] = this.words[wordLength][randomWord];
-
         }
 
         this.selectWord();
@@ -146,7 +147,7 @@ class Typer{
         }
         else if(this.word.length == 1 && keyCode == this.word.charAt(0) && this.typeCount == this.wordsInGame){
             this.endGame();
-            //document.getElementById("audioPlayer").play();
+            this.player.pause();
         }
         else if(this.word.length == 1 && keyCode == this.word.charAt(0)){
             this.changeBackground("right-word")
@@ -155,9 +156,9 @@ class Typer{
         }else if(this.word.length > 0 && keyCode == this.word.charAt(0)){
             this.changeBackground("right-button")
             this.word = this.word.slice(1);
+            this.player.play()
             this.bonus = this.bonus - 100 // bonus pole aktiivne ( ei arvutata maha)
         }
-
         this.drawWord();
     }
 
@@ -176,6 +177,7 @@ class Typer{
         //$(document.off(keypress));
         this.calculateAndShowScore();
         $('#containerBelow').show();
+        //this.player.pause()
     }
 
     calculateAndShowScore(){
@@ -195,6 +197,7 @@ class Typer{
         }
         $("#score").html(this.score + " -- " + "WPM: " + this.wordsPerMinute).show();
         this.saveResult();
+        //this.player.pause();
     }
 
     saveResult(){
